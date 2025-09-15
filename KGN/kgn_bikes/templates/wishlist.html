@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Your Wishlist</h2>
+
+{% if items %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Bike</th>
+      <th>Model</th>
+      <th>Image</th>
+      <th>Price</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <td>{{ item.bike.name }}</td>
+      <td>{{ item.bike.model }}</td>
+      <td>
+        {% if item.bike.image %}
+          <img src="{{ url_for('uploaded_file', filename=item.bike.image.split('uploads/')[1]) }}" alt="{{ item.bike.name }}" style="height:60px;object-fit:cover;border-radius:4px;">
+        {% else %}
+          <img src="{{ url_for('static', filename='images/default_bike.png') }}" alt="No Image" style="height:60px;object-fit:cover;border-radius:4px;">
+        {% endif %}
+      </td>
+      <td>₹ {{ item.bike.price }}</td>
+      <td>
+        <form action="{{ url_for('remove_from_wishlist', item_id=item.id) }}" method="post" style="display:inline;">
+          <button class="btn btn-light">Remove</button>
+        </form>
+        <form action="{{ url_for('move_wishlist_to_cart', item_id=item.id) }}" method="post" style="display:inline;">
+          <button class="btn btn-primary">Move to Cart</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+<p>Your wishlist is empty.</p>
+{% endif %}
+
+<style>
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.table th, .table td {
+  border-bottom: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: left;
+}
+.table th {
+  background: #f2f2f2;
+  font-weight: 700;
+}
+.btn {
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0 2px;
+}
+.btn-primary { background: #28a745; color: #fff; }
+.btn-light { background: #febd69; color: #232f3e; }
+</style>
+
+{% endblock %}

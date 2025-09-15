@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Hamburger Menu -->
+<div id="hamburger" onclick="openNav()">&#9776;</div>
+
+<!-- Overlay -->
+<div id="overlay" onclick="closeNav()"></div>
+
+<!-- Side Navigation -->
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="{{ url_for('emi_calculator') }}">EMI Calculator</a>
+  <a href="{{ url_for('buy_bikes') }}">Buy Bikes</a>
+  <a href="{{ url_for('all_bikes') }}">All Bikes</a>
+  <a href="#about">About Us</a>
+</div>
+
+<div class="home-container">
+  <h2 class="main-title">🏍 Welcome to <span class="highlight">KGN Bikes</span></h2>
+  <p class="subtitle">Find the best motorcycles for sale, manage your cart & wishlist, and explore options as buyer or owner.</p>
+
+  <!-- Brands Section -->
+  <div class="brands-section">
+    <h3>Browse by Brands</h3>
+    <div class="brands-grid">
+      {% for brand in brands %}
+        <a href="{{ url_for('bikes_by_brand', brand_name=brand) }}" class="brand-card">
+          <img src="{{ brand_logos.get(brand, url_for('static', filename='images/default-bike.png')) }}" 
+               alt="{{ brand }} Logo" class="brand-logo">
+          {{ brand }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <h3>Our Services</h3>
+
+  <!-- Cards Grid -->
+  <div class="grid">
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/all-bikes.jpg') }}" alt="All Bikes">
+      <div class="card-body">
+        <h3>All Bikes</h3>
+        <p>Browse the full collection of available motorcycles.</p>
+        <a href="{{ url_for('all_bikes') }}" class="btn">View Bikes</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/buy-bike.jpg') }}" alt="Buy a Bike">
+      <div class="card-body">
+        <h3>Buy a Bike</h3>
+        <p>Purchase your dream bike with ease and secure transactions.</p>
+        <a href="{{ url_for('buy_bikes') }}" class="btn">Buy Now</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/cart.jpg') }}" alt="Cart">
+      <div class="card-body">
+        <h3>Your Cart</h3>
+        <p>Review and manage the bikes you plan to purchase.</p>
+        <a href="{{ url_for('cart') }}" class="btn">Go to Cart</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/wishlist.jpg') }}" alt="Wishlist">
+      <div class="card-body">
+        <h3>Wishlist</h3>
+        <p>Keep track of the bikes you love for future purchase.</p>
+        <a href="{{ url_for('wishlist') }}" class="btn">View Wishlist</a>
+      </div>
+    </div>
+
+    {% if not session.get('owner') %}
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/owner-panel.jpg') }}" alt="Owner Panel">
+      <div class="card-body">
+        <h3>Owner Panel</h3>
+        <p>List your motorcycles and manage buyer inquiries.</p>
+        <a href="{{ url_for('owner_login') }}" class="btn btn-light">Owner Login</a>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if not session.get('buyer_id') %}
+    <div class="card">
+      <img src="{{ url_for('static', filename='images/buyer-login.jpg') }}" alt="Buyer Login">
+      <div class="card-body">
+        <h3>Buyer Login</h3>
+        <p>Access your profile, orders, and saved bikes.</p>
+        <a href="{{ url_for('buyer_login') }}" class="btn btn-light">Buyer Login</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Social Profiles Section -->
+<div class="social-section">
+  <h3>Follow Us</h3>
+  <div class="social-icons">
+    <a href="https://www.facebook.com/YourPage" target="_blank" class="fab fa-facebook-f"></a>
+    <a href="https://www.instagram.com/YourProfile" target="_blank" class="fab fa-instagram"></a>
+    <a href="https://www.twitter.com/YourProfile" target="_blank" class="fab fa-twitter"></a>
+    <a href="https://www.linkedin.com/in/YourProfile" target="_blank" class="fab fa-linkedin-in"></a>
+  </div>
+</div>
+
+<style>
+/* Basic Home Styles */
+.home-container { text-align: center; padding: 30px; }
+.main-title { font-size: 2rem; margin-bottom: 10px; }
+.highlight { color: #e63946; font-weight: bold; }
+.subtitle { font-size: 1.1rem; margin-bottom: 30px; color: #555; }
+
+/* About Section */
+.about-section { 
+  max-width: 800px; 
+  margin: 40px auto; 
+  padding: 20px; 
+  background: #f9f9f9; 
+  border-radius: 10px; 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: left;
+}
+.about-section h3 { font-size: 1.5rem; margin-bottom: 15px; color: #e63946; }
+.about-section p { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 10px; }
+
+/* Brands */
+.brands-section { text-align: center; margin-bottom: 30px; }
+.brands-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+.brand-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #f1faee;
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+.brand-card:hover { background: #ddd; }
+.brand-logo { width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; }
+
+/* Card Grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; }
+.card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.card:hover { transform: translateY(-8px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+.card img { width: 100%; height: 160px; object-fit: cover; }
+.card-body { padding: 15px; }
+.card-body h3 { margin: 10px 0; font-size: 1.3rem; color: #222; }
+.card-body p { font-size: 0.95rem; color: #666; }
+.btn { display: inline-block; margin-top: 10px; padding: 8px 16px; border-radius: 6px; background: #e63946; color: #fff; text-decoration: none; font-weight: bold; transition: background 0.2s ease; }
+.btn:hover { background: #d62839; }
+.btn-light { background: #f1faee; color: #333; border: 1px solid #ddd; }
+.btn-light:hover { background: #ddd; }
+
+/* Social Section */
+.social-section { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+.social-section h3 { font-size: 1.3rem; margin-bottom: 15px; color: #222; }
+.social-icons { display: flex; justify-content: center; gap: 20px; font-size: 1.8rem; }
+.social-icons a { color: #e63946; transition: transform 0.2s ease, color 0.2s ease; }
+.social-icons a:hover { transform: scale(1.2); color: #d62839; }
+
+/* Hamburger & Side Nav */
+#hamburger { font-size: 26px; cursor: pointer; position: absolute; top: 20px; left: 20px; z-index: 1001; color: #e63946; }
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1002;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.3s;
+  padding-top: 60px;
+}
+.sidenav a { padding: 10px 20px; text-decoration: none; font-size: 20px; color: #f1faee; display: block; transition: 0.3s; }
+.sidenav a:hover { color: #e63946; }
+.sidenav .closebtn { position: absolute; top: 10px; right: 20px; font-size: 36px; cursor: pointer; }
+
+/* Overlay for dim background */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1000;
+  transition: 0.3s;
+}
+</style>
+
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+  document.getElementById("overlay").style.width = "100%";
+}
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("overlay").style.width = "0";
+}
+</script>
+
+{% endblock %}

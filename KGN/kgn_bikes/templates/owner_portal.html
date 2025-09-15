@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Owner Portal</h2>
+
+<!-- Add New Bike Form -->
+<div class="card" style="margin-bottom:1rem;">
+  <h3>Add New Bike</h3>
+  <form action="{{ url_for('owner_portal') }}" method="post" enctype="multipart/form-data">
+    <div class="row">
+      <div>
+        <label>Name *</label>
+        <input type="text" name="name" required>
+      </div>
+      <div>
+        <label>Model *</label>
+        <input type="text" name="model" required>
+      </div>
+      <div>
+        <label>Price *</label>
+        <input type="number" name="price" required>
+      </div>
+      <div>
+        <label>Year</label>
+        <input type="text" name="year">
+      </div>
+      <div>
+        <label>Mileage (Kmpl)</label>
+        <input type="text" name="mileage">
+      </div>
+      <div>
+        <label>Runned Kms</label>
+        <input type="text" name="runned_kms">
+      </div>
+      <div>
+        <label>Location</label>
+        <input type="text" name="location">
+      </div>
+      <div>
+        <label>Contact</label>
+        <input type="text" name="contact">
+      </div>
+      <div style="grid-column:1/-1;">
+        <label>Description</label>
+        <textarea name="description"></textarea>
+      </div>
+      <div style="grid-column:1/-1;">
+        <label>Image</label>
+        <input type="file" name="image" accept="image/*">
+      </div>
+      <div style="grid-column:1/-1; text-align:right;">
+        <button type="submit" class="btn btn-primary">Add Bike</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Existing Bikes -->
+<h3>All Bikes</h3>
+{% if bikes %}
+<div class="bike-grid">
+  {% for bike in bikes %}
+    <div class="bike-card">
+      {% if bike.image %}
+      <img src="{{ url_for('uploaded_file', filename=bike.image.split('uploads/')[1]) }}" alt="{{ bike.name }}">
+      {% else %}
+      <div class="no-image">No Image</div>
+      {% endif %}
+      
+      <h4>{{ bike.name }} ({{ bike.model }})</h4>
+      <p class="price">₹ {{ bike.price }}</p>
+
+      <!-- Extra Info -->
+      <div class="bike-info">
+        {% if bike.year %}<p><strong>Year:</strong> {{ bike.year }}</p>{% endif %}
+        {% if bike.mileage %}<p><strong>Mileage:</strong> {{ bike.mileage }} kmpl</p>{% endif %}
+        {% if bike.runned_kms %}<p><strong>Runned Kms:</strong> {{ bike.runned_kms }} km</p>{% endif %}
+        {% if bike.location %}<p><strong>Location:</strong> {{ bike.location }}</p>{% endif %}
+        {% if bike.contact %}<p><strong>Contact:</strong> {{ bike.contact }}</p>{% endif %}
+        {% if bike.description %}<p><strong>Details:</strong> {{ bike.description }}</p>{% endif %}
+      </div>
+
+      <div class="bike-actions">
+        <form action="{{ url_for('delete_bike', bike_id=bike.id) }}" method="get" style="display:inline;">
+          <button type="submit" class="btn btn-light btn-sm">Delete</button>
+        </form>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% else %}
+<p>No bikes added yet.</p>
+{% endif %}
+
+<style>
+.bike-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.bike-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.bike-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.no-image {
+  width: 100%;
+  height: 150px;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  border-radius: 6px;
+}
+.bike-card h4 {
+  margin: 0.5rem 0 0.2rem;
+  font-size: 1rem;
+  color: #232f3e;
+}
+.bike-card .price {
+  font-weight: 700;
+  color: #b12704;
+}
+.bike-info p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: #444;
+}
+.bike-info strong {
+  color: #232f3e;
+}
+.bike-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+@media (max-width:700px){
+  .bike-card img, .no-image { height: 120px; }
+}
+</style>
+
+{% endblock %}

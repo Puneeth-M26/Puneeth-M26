@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="title">Profile</h2>
+
+<form method="post" class="card" style="max-width:560px">
+
+  <label>Name</label>
+  <input type="text" name="name" value="{{ buyer.name or '' }}" required>
+
+  <label>Email (Gmail)</label>
+  <input type="email" name="email"
+         pattern="[a-zA-Z0-9._%+-]+@gmail\.com$"
+         value="{{ buyer.email or '' }}" required>
+
+  <label>Phone (+91)</label>
+  <div style="display:flex;align-items:center;">
+    <span style="padding:0 0.5rem;background:#f2f2f2;border:1px solid #ccc;border-radius:4px 0 0 4px;">+91</span>
+    <input style="flex:1;border-radius:0 4px 4px 0;" type="tel" name="phone"
+           pattern="[6-9][0-9]{9}" maxlength="10"
+           placeholder="10-digit phone number"
+           value="{{ buyer.phone or '' }}" readonly>
+  </div>
+
+  <label>Address</label>
+  <textarea name="address" rows="3">{{ buyer.address or '' }}</textarea>
+
+  <button class="btn btn-primary" style="margin-top:.6rem;">Save</button>
+
+</form>
+{% endblock %}

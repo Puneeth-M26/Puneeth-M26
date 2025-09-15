@@ -1,0 +1,13 @@
+<form action="{{ url_for('add_bike') }}" method="post" enctype="multipart/form-data">
+  <input type="text" name="name" placeholder="Brand" required>
+  <input type="text" name="model" placeholder="Model" required>
+  <input type="number" name="year" placeholder="Year">
+  <input type="number" name="mileage" placeholder="Runned KMs">
+  <input type="text" name="city" placeholder="City">
+  <input type="text" name="location" placeholder="Location">
+  <input type="text" name="contact" placeholder="Contact Number">
+  <textarea name="description" placeholder="Description"></textarea>
+  <input type="number" name="price" placeholder="Price" required>
+  <input type="file" name="image">
+  <button type="submit">Add Bike</button>
+</form>

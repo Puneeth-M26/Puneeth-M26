@@ -1,0 +1,74 @@
+<div class="emi-calculator">
+  <h2>EMI Calculator</h2>
+  <p>Calculate your bike loan EMI quickly.</p>
+
+  <div class="emi-inputs">
+    <label>Loan Amount (₹)</label>
+    <input type="number" id="loanAmount" value="100000">
+
+    <label>Rate of Interest (%)</label>
+    <input type="number" id="interestRate" value="10">
+
+    <label>EMI Type</label>
+    <select id="emiType">
+      <option value="arrears">EMI in Arrears</option>
+      <option value="advance">EMI in Advance</option>
+    </select>
+
+    <button onclick="calculateEMI()">Calculate EMI</button>
+  </div>
+
+  <div class="emi-results">
+    <table>
+      <thead>
+        <tr>
+          <th>Months</th>
+          <th>EMI (₹)</th>
+        </tr>
+      </thead>
+      <tbody id="emiTable">
+        <!-- Results will appear here -->
+      </tbody>
+    </table>
+  </div>
+
+  <p class="disclaimer">
+    Disclaimer: The calculation performed by EMI Calculator is for illustrative purposes only. Actual EMI may vary.
+  </p>
+</div>
+
+<style>
+.emi-calculator { max-width: 600px; margin: 30px auto; padding: 20px; background: #f9f9f9; border-radius: 10px; text-align: center; }
+.emi-inputs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
+.emi-inputs label { flex: 1 1 100%; text-align: left; }
+.emi-inputs input, .emi-inputs select { flex: 1 1 45%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+button { padding: 8px 20px; background: #e63946; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+button:hover { background: #d62839; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+th { background: #f1faee; }
+.disclaimer { font-size: 0.8rem; color: #555; margin-top: 20px; }
+</style>
+
+<script>
+function calculateEMI() {
+    const P = parseFloat(document.getElementById('loanAmount').value);
+    const R = parseFloat(document.getElementById('interestRate').value) / 12 / 100; // monthly interest rate
+    const emiType = document.getElementById('emiType').value;
+    const monthsList = [12,24,36,48,60,72,84];
+    const emiTable = document.getElementById('emiTable');
+    emiTable.innerHTML = '';
+
+    monthsList.forEach(n => {
+        let emi;
+        if(emiType === 'arrears'){
+            emi = (P * R * Math.pow(1+R, n)) / (Math.pow(1+R, n) - 1);
+        } else { // EMI in advance
+            emi = (P * R * Math.pow(1+R, n) / (Math.pow(1+R, n) - 1)) / (1 + R);
+        }
+        emi = Math.round(emi);
+        const row = `<tr><td>${n}</td><td>₹ ${emi}/-</td></tr>`;
+        emiTable.innerHTML += row;
+    });
+}
+</script>

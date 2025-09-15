@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="title">Owner Login</h2>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul>
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="post" class="card" style="max-width:460px">
+  <label>Username</label>
+  <input type="text" name="username" required />
+
+  <label>Password</label>
+  <input type="password" name="password" required />
+
+  <button class="btn btn-primary" style="margin-top:.6rem;">Login</button>
+</form>
+{% endblock %}

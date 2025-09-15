@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block content %}
+
+<article class="detail">
+  <!-- Header -->
+  <div class="header">
+    <h2>{{ bike.name if bike.name else "Unknown Brand" }} - {{ bike.model if bike.model else "Unknown Model" }}</h2>
+    <span class="price">₹ {{ bike.price if bike.price else "N/A" }}</span>
+  </div>
+
+  <!-- Quick Highlights -->
+  <div class="highlights">
+    <span>📅 {{ bike.year if bike.year else "Not provided" }}</span>
+    <span>🛣️ {{ bike.mileage if bike.mileage else "Not provided" }} kmpl</span>
+    <span>📍 {{ bike.location if bike.location else "Not provided" }}</span>
+  </div>
+
+  <div class="detail-grid">
+    <!-- Left Side: Image -->
+    <div class="left">
+      {% if bike.image %}
+        <img src="{{ url_for('uploaded_file', filename=bike.image.split('uploads/')[1]) }}" alt="{{ bike.name }}">
+      {% else %}
+        <div class="placeholder">No Image Available</div>
+      {% endif %}
+    </div>
+
+    <!-- Right Side: Info -->
+    <div class="right">
+      <table class="info-table">
+        <tr><th>Brand</th><td>{{ bike.name if bike.name else "Not provided" }}</td></tr>
+        <tr><th>Model</th><td>{{ bike.model if bike.model else "Not provided" }}</td></tr>
+        <tr><th>Year</th><td>{{ bike.year if bike.year else "Not provided" }}</td></tr>
+        <tr><th>Mileage</th><td>{{ bike.mileage if bike.mileage else "Not provided" }} kmpl</td></tr>
+        <tr><th>Runned KMs</th><td>{{ bike.runned_kms if bike.runned_kms else "Not provided" }}</td></tr>
+        <tr><th>Location</th><td>{{ bike.location if bike.location else "Not provided" }}</td></tr>
+        <tr><th>Contact</th><td>{{ bike.contact if bike.contact else "Not provided" }}</td></tr>
+      </table>
+
+      <!-- Actions -->
+      <div class="actions">
+        <form action="{{ url_for('add_to_cart', bike_id=bike.id) }}" method="post">
+          <button type="submit" class="btn btn-primary">🛒 Add to Cart</button>
+        </form>
+        <form action="{{ url_for('add_to_wishlist', bike_id=bike.id) }}" method="post">
+          <button type="submit" class="btn btn-light">❤️ Add to Wishlist</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="description">
+    <h3>About this Bike</h3>
+    <p>{{ bike.description if bike.description else "No description available" }}</p>
+  </div>
+
+  <p class="back-link"><a href="{{ url_for('buy_bikes') }}">← Back to Listings</a></p>
+</article>
+
+<style>
+.detail {
+  background: #fff;
+  padding: 1.8rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  max-width: 1000px;
+  margin: auto;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .8rem;
+}
+.header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #232f3e;
+}
+.price {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #b12704;
+}
+.highlights {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+.highlights span {
+  background: #f4f6f8;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.left img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.placeholder {
+  width: 100%;
+  height: 320px;
+  border-radius: 10px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+.info-table th, .info-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+.info-table th {
+  text-align: left;
+  color: #555;
+  width: 140px;
+}
+.info-table td {
+  color: #222;
+}
+.actions {
+  margin-top: 1.3rem;
+  display: flex;
+  gap: 1rem;
+}
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-primary {
+  background: #0073e6;
+  color: #fff;
+}
+.btn-primary:hover { background: #005bb5; }
+.btn-light {
+  background: #f2f2f2;
+  color: #333;
+}
+.btn-light:hover { background: #e0e0e0; }
+.description {
+  margin-top: 2rem;
+}
+.description h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: #232f3e;
+}
+.back-link {
+  margin-top: 1.5rem;
+}
+.back-link a {
+  text-decoration: none;
+  color: #0073e6;
+}
+.back-link a:hover { text-decoration: underline; }
+@media(max-width: 768px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .highlights { flex-direction: column; gap: 0.5rem; }
+}
+</style>
+
+{% endblock %}

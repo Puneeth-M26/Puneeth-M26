@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>All Bikes</h2>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    padding: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  }
+
+  .card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 10px 0 5px;
+  }
+
+  .price {
+    font-size: 1rem;
+    color: #2e7d32;
+    font-weight: bold;
+  }
+
+  .year, .mileage {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .description {
+    font-size: 0.85rem;
+    color: #444;
+    margin-top: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="grid">
+  {% for bike in bikes %}
+    <div class="card">
+      <a href="{{ url_for('bike_info', bike_id=bike.id) }}">
+        {% if bike.image %}
+          <img src="{{ url_for('uploaded_file', filename=bike.image.split('/')[-1]) }}" alt="{{ bike.name }}">
+        {% else %}
+          <img src="{{ url_for('static', filename='images/default_bike.jpg') }}" alt="{{ bike.name }}">
+        {% endif %}
+      </a>
+      <div class="title">
+        <a href="{{ url_for('bike_info', bike_id=bike.id) }}">{{ bike.name }} - {{ bike.model }}</a>
+      </div>
+      <div class="price">₹ {{ bike.price }}</div>
+      <div class="year">Year: {{ bike.year }}</div>
+      <div class="mileage">Mileage: {{ bike.mileage }}</div>
+      <div class="description">{{ bike.description }}</div>
+
+      {% if session.get('owner') %}
+        <!-- Owner controls -->
+        <a href="{{ url_for('delete_bike', bike_id=bike.id) }}" class="btn btn-ghost">Delete</a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
